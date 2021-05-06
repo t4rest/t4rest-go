@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"context"
 	"os"
 	"strings"
 
@@ -13,6 +14,8 @@ type Logger struct {
 	*zap.SugaredLogger
 	FastLog *zap.Logger
 }
+
+const fieldsKey = "logger_fields"
 
 // New .
 func New(cfg Conf) *Logger {
@@ -40,6 +43,26 @@ func New(cfg Conf) *Logger {
 		SugaredLogger: fastLog.Sugar(),
 		FastLog:       fastLog,
 	}
+}
+
+// SetFields .
+func (l Logger) SetFields(ctx context.Context, fields map[string]string) context.Context {
+	return context.WithValue(ctx, fieldsKey, fields)
+}
+
+// WithContext .
+func (l Logger) WithContext(ctx context.Context) *zap.SugaredLogger {
+	log := l.SugaredLogger
+	fields, ok := ctx.Value(fieldsKey).(map[string]string)
+	if !ok {
+		return log
+	}
+
+	for k, v := range fields {
+		log = log.With(k, v)
+	}
+
+	return log
 }
 
 // Flush .
