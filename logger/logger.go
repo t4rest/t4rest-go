@@ -15,7 +15,9 @@ type Logger struct {
 	FastLog *zap.Logger
 }
 
-const fieldsKey = "logger_fields"
+type Field string
+
+const fieldsKey Field = "logger_fields"
 
 // New .
 func New(cfg Conf) *Logger {
