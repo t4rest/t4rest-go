@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/pkg/errors"
+
 	"github.com/t4rest/t4rest-go/logger"
 	"github.com/t4rest/t4rest-go/module"
 	"github.com/t4rest/t4rest-go/trace"

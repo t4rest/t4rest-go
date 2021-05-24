@@ -28,10 +28,6 @@ func (c Conf) Validate() error {
 		return errors.New("no mysql Password")
 	}
 
-	if c.MigrationDir == "" {
-		return errors.New("no mysql MigrationDir")
-	}
-
 	if c.MaxOpenConns == 0 {
 		return errors.New("no mysql MaxOpenConns")
 	}

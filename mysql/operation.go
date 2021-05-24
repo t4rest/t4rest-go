@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"context"
 	"database/sql"
 	"regexp"
 
@@ -15,7 +16,7 @@ var (
 )
 
 // Find into dest from query builder
-func (ms *Mysql) Find(dest interface{}, b squirrel.SelectBuilder, tx ...Tx) error {
+func (ms *Mysql) Find(ctx context.Context, dest interface{}, b squirrel.SelectBuilder, tx ...Tx) error {
 	q, args, err := b.ToSql()
 	if err != nil {
 		return err
@@ -26,17 +27,17 @@ func (ms *Mysql) Find(dest interface{}, b squirrel.SelectBuilder, tx ...Tx) erro
 	}
 
 	if len(tx) > 0 && tx[0] != nil {
-		err = tx[0].GetTx().Select(dest, q, args...)
+		err = tx[0].GetTx().SelectContext(ctx, dest, q, args...)
 	} else {
-		err = ms.DB.Select(dest, q, args...)
+		err = ms.DB.SelectContext(ctx, dest, q, args...)
 	}
 
 	return err
 }
 
 // FindRaw into dest from query
-func (ms *Mysql) FindRaw(dest interface{}, q string, args ...interface{}) error {
-	err := ms.DB.Select(dest, q, args...)
+func (ms *Mysql) FindRaw(ctx context.Context, dest interface{}, q string, args ...interface{}) error {
+	err := ms.DB.SelectContext(ctx, dest, q, args...)
 
 	if ms.cfg.DebugMode && ms.log != nil {
 		ms.log.Debug("FindRaw", "query", q, "params", args)
@@ -46,7 +47,7 @@ func (ms *Mysql) FindRaw(dest interface{}, q string, args ...interface{}) error 
 }
 
 // FindFirst row into dest from query builder
-func (ms *Mysql) FindFirst(dest interface{}, b squirrel.SelectBuilder, tx ...Tx) error {
+func (ms *Mysql) FindFirst(ctx context.Context, dest interface{}, b squirrel.SelectBuilder, tx ...Tx) error {
 	q, args, err := b.ToSql()
 	if err != nil {
 		return err
@@ -57,16 +58,16 @@ func (ms *Mysql) FindFirst(dest interface{}, b squirrel.SelectBuilder, tx ...Tx)
 	}
 
 	if len(tx) > 0 && tx[0] != nil {
-		err = tx[0].GetTx().Get(dest, q, args...)
+		err = tx[0].GetTx().GetContext(ctx, dest, q, args...)
 	} else {
-		err = ms.DB.Get(dest, q, args...)
+		err = ms.DB.GetContext(ctx, dest, q, args...)
 	}
 
 	return ms.parseError(err)
 }
 
 // Insert from query builder
-func (ms *Mysql) Insert(b squirrel.InsertBuilder, tx ...Tx) (uint64, error) {
+func (ms *Mysql) Insert(ctx context.Context, b squirrel.InsertBuilder, tx ...Tx) (uint64, error) {
 	q, args, err := b.ToSql()
 	if err != nil {
 		return 0, err
@@ -76,7 +77,7 @@ func (ms *Mysql) Insert(b squirrel.InsertBuilder, tx ...Tx) (uint64, error) {
 		ms.log.Debug("Insert", "query", q, "params", args)
 	}
 
-	result, err := ms.exec(q, args, tx...)
+	result, err := ms.exec(ctx, q, args, tx...)
 	if err != nil {
 		return 0, ms.parseError(err)
 	}
@@ -90,7 +91,7 @@ func (ms *Mysql) Insert(b squirrel.InsertBuilder, tx ...Tx) (uint64, error) {
 }
 
 // Exec query
-func (ms *Mysql) Exec(q string, args []interface{}, err error, tx ...Tx) (uint64, error) {
+func (ms *Mysql) Exec(ctx context.Context, q string, args []interface{}, err error, tx ...Tx) (uint64, error) {
 	if err != nil {
 		return 0, ms.parseError(err)
 	}
@@ -99,7 +100,7 @@ func (ms *Mysql) Exec(q string, args []interface{}, err error, tx ...Tx) (uint64
 		ms.log.Debug("Exec", "query", q, "params", args)
 	}
 
-	result, err := ms.exec(q, args, tx...)
+	result, err := ms.exec(ctx, q, args, tx...)
 	if err != nil {
 		return 0, err
 	}
@@ -113,7 +114,7 @@ func (ms *Mysql) Exec(q string, args []interface{}, err error, tx ...Tx) (uint64
 }
 
 // CallFunc from db
-func (ms *Mysql) CallFunc(q string, args []interface{}, tx ...Tx) error {
+func (ms *Mysql) CallFunc(ctx context.Context, q string, args []interface{}, tx ...Tx) error {
 	var err error
 
 	if ms.cfg.DebugMode && ms.log != nil {
@@ -121,22 +122,22 @@ func (ms *Mysql) CallFunc(q string, args []interface{}, tx ...Tx) error {
 	}
 
 	if len(tx) > 0 && tx[0] != nil {
-		err = tx[0].GetTx().QueryRow(q).Scan(args...)
+		err = tx[0].GetTx().QueryRowContext(ctx, q).Scan(args...)
 	} else {
-		err = ms.DB.QueryRow(q).Scan(args...)
+		err = ms.DB.QueryRowContext(ctx, q).Scan(args...)
 	}
 
 	return err
 }
 
-func (ms *Mysql) exec(q string, args []interface{}, tx ...Tx) (sql.Result, error) {
+func (ms *Mysql) exec(ctx context.Context, q string, args []interface{}, tx ...Tx) (sql.Result, error) {
 	var result sql.Result
 	var err error
 
 	if len(tx) > 0 && tx[0] != nil {
-		result, err = tx[0].GetTx().Exec(q, args...)
+		result, err = tx[0].GetTx().ExecContext(ctx, q, args...)
 	} else {
-		result, err = ms.DB.Exec(q, args...)
+		result, err = ms.DB.ExecContext(ctx, q, args...)
 	}
 
 	return result, err

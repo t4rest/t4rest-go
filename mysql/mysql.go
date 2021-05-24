@@ -1,8 +1,10 @@
 package mysql
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+
 	"github.com/t4rest/t4rest-go/logger"
 )
 
