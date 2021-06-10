@@ -15,9 +15,10 @@ type Logger struct {
 	FastLog *zap.Logger
 }
 
-type Field string
+const fieldsKey = "logger_fields"
 
-const fieldsKey Field = "logger_fields"
+// Fields .
+type Fields map[string]string
 
 // New .
 func New(cfg Conf) *Logger {
@@ -47,15 +48,15 @@ func New(cfg Conf) *Logger {
 	}
 }
 
-// SetFields .
-func (l Logger) SetFields(ctx context.Context, fields map[string]string) context.Context {
+// ContextWithFields .
+func (l Logger) ContextWithFields(ctx context.Context, fields Fields) context.Context {
 	return context.WithValue(ctx, fieldsKey, fields)
 }
 
 // WithContext .
 func (l Logger) WithContext(ctx context.Context) *zap.SugaredLogger {
 	log := l.SugaredLogger
-	fields, ok := ctx.Value(fieldsKey).(map[string]string)
+	fields, ok := ctx.Value(fieldsKey).(Fields)
 	if !ok {
 		return log
 	}

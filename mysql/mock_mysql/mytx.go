@@ -5,10 +5,10 @@
 package mock_mysql
 
 import (
-	"reflect"
+	reflect "reflect"
 
-	"github.com/golang/mock/gomock"
-	"github.com/jmoiron/sqlx"
+	gomock "github.com/golang/mock/gomock"
+	sqlx "github.com/jmoiron/sqlx"
 )
 
 // MockTx is a mock of Tx interface.

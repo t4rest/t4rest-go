@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/Masterminds/squirrel v1.5.0
 	github.com/avast/retry-go v3.0.0+incompatible
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-redis/redis/v8 v8.8.2
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/mock v1.5.0
@@ -19,6 +20,7 @@ require (
 	github.com/pressly/goose v2.7.0+incompatible
 	github.com/prometheus/client_golang v1.10.0 // indirect
 	github.com/prometheus/common v0.20.0 // indirect
+	github.com/rs/cors v1.7.0
 	github.com/stretchr/objx v0.3.0 // indirect
 	go.opentelemetry.io/otel v0.19.0
 	go.opentelemetry.io/otel/exporters/metric/prometheus v0.19.0

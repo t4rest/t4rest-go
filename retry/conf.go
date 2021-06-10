@@ -6,8 +6,7 @@ import (
 
 // Conf .
 type Conf struct {
-	Attempts  uint
-	Delay     time.Duration
-	MaxDelay  time.Duration
-	MaxJitter time.Duration
+	Attempts   uint
+	DelayMs    time.Duration
+	MaxDelayMs time.Duration
 }

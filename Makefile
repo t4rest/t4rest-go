@@ -11,7 +11,7 @@ mock-install:
 
 mock-gen:
 	mockgen github.com/t4rest/t4rest-go/redis Cacher > ./redis/mock_redis/redis.go
-	mockgen github.com/t4rest/t4rest-go/mysql Tx > ./mysql/mock_tx/mytx.go
+	mockgen github.com/t4rest/t4rest-go/mysql Tx > ./mysql/mock_mysql/mytx.go
 
 fmt:
 	go fmt ./...

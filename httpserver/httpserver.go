@@ -6,6 +6,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/pkg/errors"
+	"github.com/rs/cors"
 )
 
 // HTTPServer .
@@ -43,9 +44,17 @@ func (srv *HTTPServer) Start() error {
 		srv.register(r)
 	}
 
+	// todo: move to config
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"},
+		AllowedHeaders:   []string{"*"},
+	})
+
 	srv.server = &http.Server{
 		Addr:         srv.cfg.ListenOnPort,
-		Handler:      srv.router,
+		Handler:      c.Handler(srv.router),
 		ReadTimeout:  srv.cfg.ServerReadTimeoutSec,
 		WriteTimeout: srv.cfg.ServerWriteTimeoutSec,
 		IdleTimeout:  srv.cfg.ServerIdleTimeoutSec,

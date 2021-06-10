@@ -8,15 +8,6 @@ type Retry struct {
 	opts []retry.Option
 }
 
-//	DefaultAttempts      = uint(10)
-//	DefaultDelay         = 100 * time.Millisecond
-//	DefaultMaxJitter     = 100 * time.Millisecond
-//	DefaultOnRetry       = func(n uint, err error) {}
-//	DefaultRetryIf       = IsRecoverable
-//	DefaultDelayType     = CombineDelay(BackOffDelay, RandomDelay)
-//	DefaultLastErrorOnly = false
-//	DefaultContext       = context.Background()
-
 // New .
 func New(cfg Conf) *Retry {
 	r := &Retry{cfg: cfg}
@@ -27,16 +18,12 @@ func New(cfg Conf) *Retry {
 		r.opts = append(r.opts, retry.Attempts(cfg.Attempts))
 	}
 
-	if cfg.Delay != 0 {
-		r.opts = append(r.opts, retry.Delay(cfg.Delay))
+	if cfg.DelayMs != 0 {
+		r.opts = append(r.opts, retry.Delay(cfg.DelayMs))
 	}
 
-	if cfg.MaxDelay != 0 {
-		r.opts = append(r.opts, retry.Delay(cfg.MaxDelay))
-	}
-
-	if cfg.MaxJitter != 0 {
-		r.opts = append(r.opts, retry.Delay(cfg.MaxJitter))
+	if cfg.MaxDelayMs != 0 {
+		r.opts = append(r.opts, retry.Delay(cfg.MaxDelayMs))
 	}
 
 	return r

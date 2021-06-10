@@ -7,16 +7,16 @@ type Meta interface {
 
 // Pagination .
 type Pagination struct {
-	ResultCount uint `json:"result_count"`
-	Limit       uint `json:"limit"`
-	Offset      uint `json:"offset"`
+	ResultCount uint64 `json:"result_count"`
+	Limit       uint64 `json:"limit"`
+	Offset      uint64 `json:"offset"`
 }
 
 // GetMetaData return pagination meta
 func (p Pagination) GetMetaData() map[string]interface{} {
 	m := map[string]interface{}{}
 
-	m["pagination"] = map[string]uint{
+	m["pagination"] = map[string]uint64{
 		"total":  p.ResultCount,
 		"limit":  p.Limit,
 		"offset": p.Offset,

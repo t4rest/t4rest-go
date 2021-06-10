@@ -5,11 +5,11 @@
 package mock_redis
 
 import (
-	"context"
-	"reflect"
-	"time"
+	context "context"
+	reflect "reflect"
+	time "time"
 
-	"github.com/golang/mock/gomock"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockCacher is a mock of Cacher interface.

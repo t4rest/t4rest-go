@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	error2 "github.com/t4rest/t4rest-go/httpserver/error"
-
 	"github.com/t4rest/t4rest-go/meta"
 )
 
@@ -36,27 +34,27 @@ func JSON(w http.ResponseWriter, data interface{}, md ...meta.Meta) {
 
 // ERROR writes to ResponseWriter error
 func ERROR(w http.ResponseWriter, err error) {
-	code := http.StatusInternalServerError
+	HTTPStatus := http.StatusInternalServerError
 	resp := map[string]interface{}{
-		"code":    error2.ErrService,
+		"code":    ErrService,
 		"message": "Internet Server Error",
 	}
 
 	switch apiErr := err.(type) {
-	case error2.APIError:
+	case APIError:
 		resp["code"] = apiErr.Code
 		resp["message"] = apiErr.Message
-		code = apiErr.Code.GetHTTPCode()
-	case error2.ValidationError:
+		HTTPStatus = apiErr.Code.GetHTTPCode()
+	case ValidationError:
 		resp["code"] = apiErr.Code
 		resp["message"] = apiErr.Message
 		resp["validation_errors"] = apiErr.Errors
-		code = http.StatusBadRequest
+		HTTPStatus = http.StatusBadRequest
 	}
 
 	js, _ := json.Marshal(resp)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
+	w.WriteHeader(HTTPStatus)
 	_, _ = w.Write(js)
 }
