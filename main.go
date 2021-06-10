@@ -33,7 +33,7 @@ func main() {
 	// retry example
 	err500 := errors.New("Server error")
 
-	r := ret.New(ret.Conf{Attempts: 3, Delay: 10 * time.Second, MaxDelay: 30 * time.Second})
+	r := ret.New(ret.Conf{Attempts: 3, DelayMs: 10 * time.Second, MaxDelayMs: 30 * time.Second})
 	err = r.Do(
 		func() error {
 
