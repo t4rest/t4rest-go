@@ -18,7 +18,7 @@ type Logger struct {
 const fieldsKey = "logger_fields"
 
 // Fields .
-type Fields map[string]string
+type Fields map[string]interface{}
 
 // New .
 func New(cfg Conf) *Logger {

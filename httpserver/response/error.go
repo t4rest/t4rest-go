@@ -91,12 +91,40 @@ func NewNotFoundError() APIError {
 }
 
 // NewValidationError .
-func NewValidationError(err url.Values) ValidationError {
+func NewValidationError(key, error string) ValidationError {
+	err := url.Values{}
+	err.Add(key, error)
+
 	return ValidationError{
 		APIError: APIError{
 			Code:    ErrBadParam,
 			Message: "Bad Request",
 		},
 		Errors: err,
+	}
+}
+
+// Add .
+func (ve ValidationError) Add(key, error string) {
+	ve.Errors.Add(key, error)
+}
+
+// NewValidationErrors .
+func NewValidationErrors(err url.Values) ValidationError {
+	return ValidationError{
+		APIError: APIError{
+			Code:    ErrBadParam,
+			Message: "Bad Request",
+		},
+		Errors: err,
+	}
+}
+
+// NewForbiddenError .
+func NewForbiddenError(err error) APIError {
+	return APIError{
+		Code:    ErrAccess,
+		Message: "Forbidden",
+		err:     err,
 	}
 }

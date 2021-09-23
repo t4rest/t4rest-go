@@ -29,7 +29,6 @@ require (
 	go.opentelemetry.io/otel/sdk/metric v0.19.0
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.16.0
-	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/text v0.3.6 // indirect
 	google.golang.org/api v0.44.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
